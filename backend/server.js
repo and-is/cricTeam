@@ -1,11 +1,19 @@
 import app from "./app.js";
 import dotenv from "dotenv";
 dotenv.config();
-import connectDB from "./config/dbconfig.js";
+import Database from "./config/dbconfig.js";
 
 const PORT = process.env.PORT;
 
-connectDB();
+const credentials = {
+  host: "localhost",
+  username: process.env.USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+};
+
+const db = new Database(credentials);
+db.connect();
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
