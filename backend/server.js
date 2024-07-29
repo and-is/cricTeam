@@ -13,7 +13,7 @@ const credentials = {
 };
 
 const db = new Database(credentials);
-db.connect();
+const connection1 = db.connect();
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

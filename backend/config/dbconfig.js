@@ -12,19 +12,20 @@ class Database {
 
   async connect() {
     try {
-      const connection = mysql.createConnection({
+      const connection = await mysql.createConnection({
         host: this.host,
         user: this.username,
         password: this.password,
         database: this.database,
       });
-      await connection.connect((e) => {
+      connection.connect((e) => {
         if (e) {
           console.error("Error connecting", e.message);
         } else {
           console.log("Connected Successfully");
         }
       });
+      return connection;
     } catch (error) {
       console.error("Error connecting", error.message);
     }
