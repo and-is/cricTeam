@@ -44,7 +44,7 @@ class Team {
   async insertTable(name, coach) {
     const connection = await this.db.connect();
     const insertTableQuery = `
-      INSERT INTO Teams (Name, Coach)
+      INSERT INTO Teams (TeamName, Coach)
       VALUES (?, ?);
     `;
     connection.query(
@@ -72,7 +72,7 @@ class Team {
     const connection = await this.db.connect();
     const updateTableQuery = `
       UPDATE Teams
-      SET Name = ?, Coach = ?
+      SET TeamName = ?, Coach = ?
       WHERE TeamID = ?;
     `;
     connection.query(
@@ -119,22 +119,28 @@ class Team {
 
   async viewEntries() {
     const connection = await this.db.connect();
-    const viewQuery = ``;
+    const viewQuery = `
+    SELECT TeamName, Coach
+    FROM Teams;
+    `;
 
-    connection.query(viewQuery, (error, results, fields) => {
-      if (error) {
-        console.error("Error viewing entries ", error);
-        return;
-      }
-      console.log("Viewing entries successful ", results);
-    });
+    return new Promise((resolve, reject) => {
+      connection.query(viewQuery, (error, results, fields) => {
+        if (error) {
+          console.error("Error reading data", error);
+          reject(error);
+          return;
+        }
+        resolve(results);
+      });
 
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection:", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
+      connection.end((err) => {
+        if (err) {
+          console.error("Error ending connection", err.message);
+        } else {
+          console.log("Connection ended successfully.");
+        }
+      });
     });
   }
 }

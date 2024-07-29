@@ -34,4 +34,11 @@ export const deleteMatch = async (req, res) => {
   }
 };
 
-export const viewMatch = async (req, res) => {};
+export const viewMatch = async (req, res) => {
+  try {
+    const results = await teams.viewEntries();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};

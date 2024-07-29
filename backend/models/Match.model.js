@@ -124,22 +124,37 @@ class Match {
 
   async viewEntries() {
     const connection = await this.db.connect();
-    const viewQuery = ``;
+    const viewQuery = `
+    SELECT 
+        Matches.MatchID,
+        Matches.Date,
+        Matches.Venue,
+        T1.TeamName as Team1Name,
+        T2.TeamName as Team2Name,
+        W.TeamName as WinnerTeamName
+      FROM Matches
+      JOIN Teams T1 ON Matches.Team1ID = T1.TeamID
+      JOIN Teams T2 ON Matches.Team2ID = T2.TeamID
+      JOIN Teams W ON Matches.WinnerID = W.TeamID;
+    `;
 
-    connection.query(viewQuery, (error, results, fields) => {
-      if (error) {
-        console.error("Error viewing entries ", error);
-        return;
-      }
-      console.log("Viewing entries successful ", results);
-    });
+    return new Promise((resolve, reject) => {
+      connection.query(viewQuery, (error, results, fields) => {
+        if (error) {
+          console.error("Error reading data", error);
+          reject(error);
+          return;
+        }
+        resolve(results);
+      });
 
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection:", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
+      connection.end((err) => {
+        if (err) {
+          console.error("Error ending connection:", err.message);
+        } else {
+          console.log("Connection ended successfully.");
+        }
+      });
     });
   }
 }

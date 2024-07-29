@@ -5,7 +5,6 @@ const teams = new Team();
 export const createTeam = async (req, res) => {
   const { name, coach } = req.body;
   try {
-    await teams.createTable();
     await teams.insertTable(name, coach);
     res.status(201).send("Team created successfully");
   } catch (error) {
@@ -34,4 +33,11 @@ export const deleteTeam = async (req, res) => {
   }
 };
 
-export const viewTeam = async (req, res) => {};
+export const viewTeam = async (req, res) => {
+  try {
+    const results = await teams.viewEntries();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};

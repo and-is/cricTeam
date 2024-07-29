@@ -34,4 +34,11 @@ export const deleteStat = async (req, res) => {
   }
 };
 
-export const viewStat = async (req, res) => {};
+export const viewStat = async (req, res) => {
+  try {
+    const results = await teams.viewEntries();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
