@@ -116,6 +116,27 @@ class Team {
       }
     });
   }
+
+  async viewEntries() {
+    const connection = await this.db.connect();
+    const viewQuery = ``;
+
+    connection.query(viewQuery, (error, results, fields) => {
+      if (error) {
+        console.error("Error viewing entries ", error);
+        return;
+      }
+      console.log("Viewing entries successful ", results);
+    });
+
+    connection.end((err) => {
+      if (err) {
+        console.error("Error ending connection:", err.message);
+      } else {
+        console.log("Connection ended successfully.");
+      }
+    });
+  }
 }
 
 export default Team;
