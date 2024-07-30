@@ -5,7 +5,6 @@ const players = new Player();
 export const createPlayer = async (req, res) => {
   const { name, age, teamId, role } = req.body;
   try {
-    await players.createTable();
     await players.insertTable(name, age, teamId, role);
     res.status(201).send("Player created successfully");
   } catch (error) {
@@ -36,7 +35,7 @@ export const deletePlayer = async (req, res) => {
 
 export const viewPlayer = async (req, res) => {
   try {
-    const results = await teams.viewEntries();
+    const results = await players.viewEntries();
     res.status(200).json(results);
   } catch (error) {
     res.status(500).send(error.message);

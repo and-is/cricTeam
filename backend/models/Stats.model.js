@@ -49,7 +49,7 @@ class PlayerStatistics {
   async insertTable(playerId, matchId, runs, wickets, catches) {
     const connection = await this.db.connect();
     const insertTableQuery = `
-      INSERT INTO Stats (PlayerID, MatchID, Runs, Wickets, Catches)
+      INSERT INTO PlayerStatistics (PlayerID, MatchID, Runs, Wickets, Catches)
       VALUES (?, ?, ?, ?, ?);
     `;
     connection.query(
@@ -76,7 +76,7 @@ class PlayerStatistics {
   async updateTable(statId, playerId, matchId, runs, wickets, catches) {
     const connection = await this.db.connect();
     const updateTableQuery = `
-      UPDATE Stats
+      UPDATE PlayerStatistics
       SET PlayerID = ?, MatchID = ?, Runs = ?, Wickets = ?, Catches = ?
       WHERE StatID = ?;
     `;
@@ -103,7 +103,7 @@ class PlayerStatistics {
 
   async deleteEntries(statId) {
     const connection = await this.db.connect();
-    const deleteQuery = `DELETE FROM Stats WHERE StatID = ?;`;
+    const deleteQuery = `DELETE FROM PlayerStatistics WHERE StatID = ?;`;
 
     connection.query(deleteQuery, [statId], (error, results, fields) => {
       if (error) {
@@ -125,14 +125,14 @@ class PlayerStatistics {
   async viewEntries() {
     const connection = await this.db.connect();
     const viewQuery = `
-    SELECT p.PlayerName, m.Venue, s.Runs, s.Wickets, s.Catches
-    FROM Stats s
+    SELECT p.Name, m.Venue, s.Runs, s.Wickets, s.Catches
+    FROM PlayerStatistics s
     JOIN Players p ON s.PlayerID = p.PlayerID
     JOIN Matches m ON s.MatchID = m.MatchID;
     `;
 
     return new Promise((resolve, reject) => {
-      connection.query(getAllQuery, (error, results, fields) => {
+      connection.query(viewQuery, (error, results, fields) => {
         if (error) {
           console.error("Error reading data", error);
           reject(error);

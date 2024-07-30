@@ -122,7 +122,7 @@ class Player {
   async viewEntries() {
     const connection = await this.db.connect();
     const viewQuery = `
-    SELECT p.PlayerName, p.Age, p.Role, p.Nationality, t.TeamName
+    SELECT p.Name, p.Age, p.Role, t.TeamName
     FROM Players p
     JOIN Teams t ON p.TeamID = t.TeamID;
     `;
