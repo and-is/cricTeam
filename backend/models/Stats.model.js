@@ -1,21 +1,13 @@
 import Database from "../config/dbconfig.js";
 import dotenv from "dotenv";
+import { connection } from "../server.js";
 
 dotenv.config();
 
 class PlayerStatistics {
-  constructor() {
-    this.db = new Database({
-      host: "localhost",
-      username: process.env.USERNAME,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
-    });
-  }
+  constructor() {}
 
   async createTable() {
-    const connection = await this.db.connect();
-
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS PlayerStatistics (
         StatID INT PRIMARY KEY AUTO_INCREMENT,
@@ -36,18 +28,9 @@ class PlayerStatistics {
       }
       console.log("Table created successfully:", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection:", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async insertTable(playerId, matchId, runs, wickets, catches) {
-    const connection = await this.db.connect();
     const insertTableQuery = `
       INSERT INTO PlayerStatistics (PlayerID, MatchID, Runs, Wickets, Catches)
       VALUES (?, ?, ?, ?, ?);
@@ -63,18 +46,9 @@ class PlayerStatistics {
         console.log("Data inserted successfully ", results);
       }
     );
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async updateTable(statId, playerId, matchId, runs, wickets, catches) {
-    const connection = await this.db.connect();
     const updateTableQuery = `
       UPDATE PlayerStatistics
       SET PlayerID = ?, MatchID = ?, Runs = ?, Wickets = ?, Catches = ?
@@ -91,18 +65,9 @@ class PlayerStatistics {
         console.log("Data updated successfully ", results);
       }
     );
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async deleteEntries(statId) {
-    const connection = await this.db.connect();
     const deleteQuery = `DELETE FROM PlayerStatistics WHERE StatID = ?;`;
 
     connection.query(deleteQuery, [statId], (error, results, fields) => {
@@ -112,18 +77,9 @@ class PlayerStatistics {
       }
       console.log("Data deleted successfully. ", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async viewEntries() {
-    const connection = await this.db.connect();
     const viewQuery = `
     SELECT p.Name, m.Venue, s.Runs, s.Wickets, s.Catches
     FROM PlayerStatistics s
@@ -139,14 +95,6 @@ class PlayerStatistics {
           return;
         }
         resolve(results);
-      });
-
-      connection.end((err) => {
-        if (err) {
-          console.error("Error ending connection", err.message);
-        } else {
-          console.log("Connection ended successfully.");
-        }
       });
     });
   }

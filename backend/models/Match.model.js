@@ -1,21 +1,13 @@
 import Database from "../config/dbconfig.js";
 import dotenv from "dotenv";
+import { connection } from "../server.js";
 
 dotenv.config();
 
 class Match {
-  constructor() {
-    this.db = new Database({
-      host: "localhost",
-      username: process.env.USERNAME,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
-    });
-  }
+  constructor() {}
 
   async createTable() {
-    const connection = await this.db.connect();
-
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS Matches (
         MatchID INT PRIMARY KEY AUTO_INCREMENT,
@@ -37,18 +29,9 @@ class Match {
       }
       console.log("Table created successfully:", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection:", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async insertTable(date, venue, team1Id, team2Id, winnerId) {
-    const connection = await this.db.connect();
     const insertTableQUery = `
     INSERT INTO Matches (Date, Venue, Team1ID, Team2ID, WinnerID)
     VALUES (?, ?, ?, ?, ?);
@@ -64,18 +47,9 @@ class Match {
         console.log("Data inserted successfully ", results);
       }
     );
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async updateTable(matchId, date, venue, team1Id, team2Id, winnerId) {
-    const connection = await this.db.connect();
     const updateTableQuery = `
     UPDATE Matches
         SET Date = ?, Venue = ?, Team1ID = ?, Team2ID = ?, WinnerID = ?
@@ -92,17 +66,9 @@ class Match {
         console.log("Data updated successfully ", results);
       }
     );
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async deleteEntries(matchId) {
-    const connection = await this.db.connect();
     const deleteQuery = ` DELETE FROM Matches WHERE MatchID = ?;`;
 
     connection.query(deleteQuery, [matchId], (error, results, fields) => {
@@ -112,18 +78,9 @@ class Match {
       }
       console.log("Data deleted successfully. ", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async viewEntries() {
-    const connection = await this.db.connect();
     const viewQuery = `
     SELECT 
         Matches.MatchID,
@@ -146,14 +103,6 @@ class Match {
           return;
         }
         resolve(results);
-      });
-
-      connection.end((err) => {
-        if (err) {
-          console.error("Error ending connection:", err.message);
-        } else {
-          console.log("Connection ended successfully.");
-        }
       });
     });
   }

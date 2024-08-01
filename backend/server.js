@@ -13,7 +13,8 @@ const credentials = {
 };
 
 const db = new Database(credentials);
-const connection1 = db.connect();
+const connection = await db.connect();
+export { connection };
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

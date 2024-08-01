@@ -1,21 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
+import { connection } from "../server.js";
 
 import Database from "../config/dbconfig.js";
 
 class Team {
-  constructor() {
-    this.db = new Database({
-      host: "localhost",
-      username: process.env.USERNAME,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
-    });
-  }
+  constructor() {}
 
   async createTable() {
-    const connection = await this.db.connect();
-
     const createTableQuery = `CREATE TABLE IF NOT EXISTS Teams (
       TeamId INT primary key auto_increment,
       TeamName varchar(50) not null,
@@ -30,19 +22,9 @@ class Team {
       }
       console.log("Table created successfully", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection: ", err.message);
-      } else {
-        console.log("Connection ended successfully!");
-      }
-    });
-    return connection;
   }
 
   async insertTable(name, coach) {
-    const connection = await this.db.connect();
     const insertTableQuery = `
       INSERT INTO Teams (TeamName, Coach)
       VALUES (?, ?);
@@ -58,18 +40,9 @@ class Team {
         console.log("Data inserted successfully ", results);
       }
     );
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async updateTable(teamId, name, coach) {
-    const connection = await this.db.connect();
     const updateTableQuery = `
       UPDATE Teams
       SET TeamName = ?, Coach = ?
@@ -86,18 +59,9 @@ class Team {
         console.log("Data updated successfully ", results);
       }
     );
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async deleteEntries(teamId) {
-    const connection = await this.db.connect();
     const deleteQuery = `DELETE FROM Teams WHERE TeamID = ?;`;
 
     connection.query(deleteQuery, [teamId], (error, results, fields) => {
@@ -107,18 +71,9 @@ class Team {
       }
       console.log("Data deleted successfully. ", results);
     });
-
-    connection.end((err) => {
-      if (err) {
-        console.error("Error ending connection", err.message);
-      } else {
-        console.log("Connection ended successfully.");
-      }
-    });
   }
 
   async viewEntries() {
-    const connection = await this.db.connect();
     const viewQuery = `
     SELECT TeamName, Coach
     FROM Teams;
@@ -132,14 +87,6 @@ class Team {
           return;
         }
         resolve(results);
-      });
-
-      connection.end((err) => {
-        if (err) {
-          console.error("Error ending connection", err.message);
-        } else {
-          console.log("Connection ended successfully.");
-        }
       });
     });
   }
