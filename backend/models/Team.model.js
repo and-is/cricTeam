@@ -75,7 +75,7 @@ class Team {
 
   async viewEntries() {
     const viewQuery = `
-    SELECT TeamName, Coach
+    SELECT TeamId, TeamName, Coach
     FROM Teams;
     `;
 

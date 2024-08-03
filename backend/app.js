@@ -5,7 +5,16 @@ import teamsRouter from "./routes/teams.routes.js";
 import playersRouter from "./routes/players.routes.js";
 import statsRouter from "./routes/stats.routes.js";
 import matchesRouter from "./routes/matches.routes.js";
+import cors from "cors";
 
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   res.send("hi");
 });
